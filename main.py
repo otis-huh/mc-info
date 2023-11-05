@@ -46,8 +46,10 @@ async def server(interaction, server_ip: str):
     embed.add_field(name="Players", value=f"{status.players.online}/{status.players.max}", inline=True)
     embed.set_footer(text=f"{interaction.user.name}", icon_url=f"{interaction.user.display_avatar.url}")
 
-    await interaction.followup.send(file=file, embed=embed)
-
+    if not status.icon:
+        await interaction.followup.send(embed=embed)
+    else:
+        await interaction.followup.send(file=file, embed=embed)
 
 @tree.command(name = "players", description = "Show players on server if possible.")
 @app_commands.describe(server_ip="The IP of the server to lookup.")
