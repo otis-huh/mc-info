@@ -25,14 +25,18 @@ async def server(interaction, server_ip: str):
     server = JavaServer.lookup(server_ip)
     status = server.status()
 
-    file = discord.File(io.BytesIO(base64.b64decode(status.icon.lstrip("data:image/png;base64"))), filename="image.png")
+    if not status.icon:
+        image = "https://media.minecraftforum.net/attachments/300/619/636977108000120237.png"
+    else:
+        file = discord.File(io.BytesIO(base64.b64decode(status.icon.lstrip("data:image/png;base64"))), filename="image.png")
+        image = "attachment://image.png"
 
     embed = discord.Embed(
         title = f"{server_ip}",
         description = f"{status.motd.to_plain()}",
         timestamp=datetime.datetime.now()
     )
-    embed.set_thumbnail(url="attachment://image.png")
+    embed.set_thumbnail(url=image)
     embed.add_field(name="Version", value=f"{status.version.name}", inline=True)
     embed.add_field(name="Latency", value=f"{round(status.latency, 2)}", inline=True)
     embed.add_field(name="Players", value=f"{status.players.online}/{status.players.max}", inline=True)
