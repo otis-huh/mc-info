@@ -17,6 +17,10 @@ async def on_ready():
     await tree.sync()
     print(f'Ready! Logged in as {client.user}')
 
+@tree.error
+async def on_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
+    await interaction.followup.send(error)
+
 @tree.command(name = "server", description = "Show server info.")
 @app_commands.describe(server_ip="The IP of the server to lookup.")
 async def server(interaction, server_ip: str):
